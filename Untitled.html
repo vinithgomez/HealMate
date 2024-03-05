@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealMate</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url(Healmate.jpg); /* Path to your background image */
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(250, 242, 242, 0.8); /* Semi-transparent white background */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+        .chat-box {
+            overflow-y: scroll;
+            height: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .input-box {
+            display: flex;
+        }
+        .input-box input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+        .input-box button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            outline: none;
+        }
+        /* Overlay styling */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: left;
+            align-items: left;
+        }
+        .modal {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Main content -->
+    <div class="container" id="main-content">
+        <h1>Welcome to HealMate</h1>
+        <p>This is a safe space for you to express yourself and discuss your feelings.</p>
+        <div class="chat-box" id="chat-box">
+            <p>Welcome! How can I assist you today?</p>
+        </div>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-btn" onclick="">Send</button>
+        </div>
+    </div>
+
+    <!-- Modal overlay for sign-in and registration -->
+    <div class="overlay" id="overlay">
+        <div class="modal">
+            <h2 id="form-title">Sign In</h2>
+            <div class="form-container" id="login-form-container">
+                <form class="sign-in-form" id="sign-in-form">
+                    <input type="text" id="username" placeholder="Username">
+                    <input type="password" id="password" placeholder="Password">
+                    <button type="submit" id="sign-in-btn">Sign In</button>
+                </form>
+                <p>Don't have an account? <a href="#" id="register-link">Register</a></p>
+            </div>
+            <div class="form-container" id="register-form-container">
+                <form class="register-form" id="register-form">
+                    <input type="text" id="new-username" placeholder="New Username">
+                    <input type="password" id="new-password" placeholder="New Password">
+                    <button type="submit" id="register-btn">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" id="login-link">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const loginFormContainer = document.getElementById("login-form-container");
+            const registerFormContainer = document.getElementById("register-form-container");
+            const loginLink = document.getElementById("login-link");
+            const registerLink = document.getElementById("register-link");
+            const formTitle = document.getElementById("form-title");
+
+            // Show login form by default
+            loginFormContainer.classList.add("active");
+            formTitle.textContent = "Sign In";
+
+            // Toggle between login and registration forms
+            loginLink.addEventListener("click", function(event) {
+                event.preventDefault();
+                loginFormContainer.classList.add("active");
+                registerFormContainer.classList.remove("active");
+                formTitle.textContent = "Sign In";
+            });
+
+            registerLink.addEventListener("click", function(event) {
+                event.preventDefault();
+                loginFormContainer.classList.remove("active");
+                registerFormContainer.classList.add("active");
+                formTitle.textContent = "Register";
+            });
+        });
+    </script>
+    <script>
+        // Function to handle sign-in form submission
+        document.getElementById("sign-in-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+            // Get username and password
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            // Here, you can add your sign-in logic
+            // For simplicity, let's assume the sign-in is successful
+            // Hide the overlay and display the main content
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+            // Call function to initialize HealBot chat
+            initializeHealBotChat();
+        });
+
+        document.getElementById("send-btn").addEventListener("click", function(event) {
+            const data = document.getElementById("user-input");
+            console.log(data.value);
+        });
+    
+        // Function to initialize HealBot chat
+        function initializeHealBotChat() {
+            // Your chat initialization logic goes here
+            // For example, you can connect to the chat server, load chat history, etc.
+            // Here's a simple example of displaying a message in the chat box
+            var chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = "<p>Welcome! How can I assist you today?</p>";
+        }
+    </script>
+    <script> 
+    // Function to play soothing music
+function playSoothingMusic(query) {
+    fetch('/search-track', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: query })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.track_uri) {
+            // Code to play the track using the track URI
+            console.log('Playing track:', data.track_uri);
+        } else {
+            console.error('No tracks found for the query');
+        }
+    })
+    .catch(error => {
+        console.error('Error searching for tracks:', error);
+    });
+}
+
+// Example usage
+// Call this function whenever you want to play soothing music
+playSoothingMusic('soothing music');
+    </script> 
+</body>
+</html>
